@@ -16,7 +16,9 @@ export default class TableRow extends Component {
         this.deleteRow = this.deleteRow.bind(this);
     }
 
+    // changes editing mode from disabled to enabled, or vice-versa, depending upon which state it currently is in.
     changeEditMode() {
+        // if editing is true, and is being changed to false, then send the new data to the API.
         if (!this.state.editing === false) {
             const postData = {
                 id: this.props.item.post.id,
@@ -28,19 +30,23 @@ export default class TableRow extends Component {
                     this.setState({editing: !this.state.editing});
                 })
                 .catch((error) => {
+                    // if an error happens, then set title back to the original value, and disable editing.
                     console.log(error);
                     this.setState({postTitle: this.props.item.post.title, editing: !this.state.editing});
                 });
         }
+        // editing is disabled and is going to be enabled
         else {
             this.setState({editing: !this.state.editing});
         }
     }
 
+    // changes the value on the postTitle state variable as user inputs new text
     handleTextChange(e) {
         this.setState({postTitle: e.target.value});
     }
 
+    // calls the handleDelete prop function with the row's ID, and all the row's data for deletion
     deleteRow() {
         this.props.handleDelete(this.props.id, {
             postId: this.props.item.post.id,
@@ -71,8 +77,8 @@ export default class TableRow extends Component {
 }
 
 TableRow.propTypes = {
-    id: PropTypes.number,
-    item: PropTypes.object,
+    id: PropTypes.number.isRequired,
+    item: PropTypes.object.isRequired,
     handleUpdate: PropTypes.func,
     handleDelete: PropTypes.func
 };

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Table} from 'react-bootstrap';
 import TableRow from "./TableRow";
-import APIUtil from "./APIUtil";
+import APIUtil from "../utils/APIUtil";
 
 export default class DataList extends Component {
     constructor(props) {
@@ -16,6 +16,7 @@ export default class DataList extends Component {
         this.deleteRow = this.deleteRow.bind(this);
     }
 
+    // initializes the 'api' class variable, and immediately starts loading data from the API
     componentDidMount() {
         this.api = new APIUtil();
 
@@ -25,6 +26,7 @@ export default class DataList extends Component {
             });
     }
 
+    // returns an array with <TableRows> for the <Table>
     printRows(data) {
         return data.map((item, index) => {
             return (
@@ -39,10 +41,15 @@ export default class DataList extends Component {
         });
     }
 
+    // passes the HTTP PUT result from the 'api' class variable back to the <TableRow>
     async updateRow(postData) {
         return await this.api.updateData(postData);
     }
 
+    // sends an HTTP DELETE through the 'api' class variable, and if successful,
+    // it will delete that row's data locally and remotely.
+    //
+    // otherwise, it won't do anything besides outputting the error to the console.
     deleteRow(rowId, resourceIds) {
         this.api.deleteData(resourceIds.postId, resourceIds.albumId, resourceIds.userId)
             .then(() => {
